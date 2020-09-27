@@ -9,7 +9,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      msg: "welcome to index.vue",
+      msg: "welcome to webpack",
     };
   },
   mounted() {
