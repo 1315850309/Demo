@@ -51,6 +51,11 @@ module.exports = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, {
           loader: "css-loader"
+        }, {
+          loader: "px2rem-loader",
+          options: {
+            remUnit: 75
+          }
         }]
       },
       // {
@@ -64,10 +69,17 @@ module.exports = {
       {
         test: /\.less$/,
         use: [MiniCssExtractPlugin.loader, {
-          loader: "css-loader"
-        }, {
-          loader: "less-loader"
-        }]
+            loader: "css-loader"
+          }, {
+            loader: "px2rem-loader",
+            options: {
+              remUnit: 75
+            }
+          },
+          {
+            loader: "less-loader"
+          }
+        ]
       },
       {
         test: /\.(png|jpg|svg)$/,
@@ -90,14 +102,16 @@ module.exports = {
   plugins: [
     new OptimizeCSSAssetsPlugin(), //普通压缩css
     new MiniCssExtractPlugin({
-      filename: "css/[name][hash].css"
+      filename: "css/[name][hash].css",
+      chunkFilename: "css/[name][hash].css"
     }),
     // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "../public/index.html"),
       fileName: "index.html",
       inject: "body",
-      title: "webpack"
+      title: "webpack",
+      favicon: path.join(__dirname, "../src/assets/logo.png")
     })
   ]
 }

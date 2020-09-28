@@ -1,18 +1,27 @@
 <template>
   <div class="main">
-    <img src="../static/images/流星.png" />
-    <h1 style="color: pink">{{ msg }}</h1>
+    <audio
+      controls="controls"
+      v-for="(it, i) in musicArray"
+      :key="i"
+      :src="it.url"
+    ></audio>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import { getInfo } from "@/assets/common/api";
 export default {
   data() {
     return {
-      msg: "welcome to webpack",
+      musicArray: [],
     };
   },
   mounted() {
+    getInfo().then((res) => {
+      this.musicArray = res.data;
+      console.log(this.musicArray);
+    });
     console.log(this.$store);
     console.log(this.user, "user");
   },
@@ -22,12 +31,4 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.main {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  h1 {
-    color: red;
-  }
-}
 </style>
