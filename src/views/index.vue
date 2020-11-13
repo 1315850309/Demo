@@ -149,7 +149,7 @@ export default {
     },
     subscribeTimeQuantum: {
       type: Number,
-      default: 5,
+      default: 1,
     },
     unForbiddenWeek: {
       type: Array,
@@ -171,7 +171,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.subscribeRoomData, "subscribeRoomData");
     this.initTime();
     // this.initSubscribeHour();
   },
@@ -195,14 +194,35 @@ export default {
         this.activeRoom = i;
         this.subscribeSelect = [];
       }
+      // 如果不是连续的时间段--就初始化
+      let temporaryStorage = [];
+      this.subscribeSelect.forEach((item) => {
+        let date1 = new Date(item.startHour).getTime();
+        let date2 = new Date(item.endHour).getTime();
+        temporaryStorage.push(date1, date2);
+      });
+      temporaryStorage.sort((a, b) => a - b);
+      temporaryStorage = [...new Set(temporaryStorage)];
+      let needStorage1 = new Date(time.startHour).getTime();
+      let needStorage2 = new Date(time.endHour).getTime();
+      let num = (60 / this.subscribeTimeQuantum) * 60 * 1000;
+      if (
+        //如果是相连的时间段就不初始化
+        temporaryStorage.length &&
+        !(
+          temporaryStorage[0] - num == needStorage1 ||
+          temporaryStorage[temporaryStorage.length - 1] + num == needStorage2
+        )
+      ) {
+        this.subscribeSelect = [];
+      }
       //传过来的会议室信息、可预约时间段
       this.subscribeSelect.push(time);
-      console.log(this.subscribeSelect, time, "time");
+      console.log(this.subscribeSelect, "this.subscribeSelect");
       this.$emit("subscribeHandle", it, this.subscribeSelect);
     },
     // 选中改变状态
     selectChangeStatus(it) {
-      console.log("xxxxxxxxxxxxx");
       return this.subscribeSelect.some((item) => {
         let timeStart1 = new Date(it.startHour).getTime();
         let timeEnd1 = new Date(it.endHour).getTime();
