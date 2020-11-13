@@ -145,11 +145,11 @@ export default {
     subscribeEndHour: {
       //结束整数时
       type: Number,
-      default: 16,
+      default: 24,
     },
     subscribeTimeQuantum: {
       type: Number,
-      default: 1,
+      default: 2,
     },
     unForbiddenWeek: {
       type: Array,
