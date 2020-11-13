@@ -1,5 +1,6 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const {
   CleanWebpackPlugin
@@ -18,7 +19,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, "../public/index.html"),
-    host: "localhost",
+    host: "10.0.17.106",
     port: 8080,
     open: true,
     proxy: {
@@ -49,6 +50,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
+        exclude:"/node_modules",
         use: [MiniCssExtractPlugin.loader, {
           loader: "css-loader"
         }, {
@@ -58,16 +60,9 @@ module.exports = {
           }
         }]
       },
-      // {
-      //   test: /\.css$/,
-      //   use: ["vue-style-loader", "css-loader"]
-      // },
-      // {
-      //   test: /\.less$/,
-      //   use: ["vue-style-loader", "css-loader", "less-loader"]
-      // },
       {
         test: /\.less$/,
+        exclude:"/node_modules",
         use: [MiniCssExtractPlugin.loader, {
             loader: "css-loader"
           }, {
@@ -81,6 +76,11 @@ module.exports = {
           }
         ]
       },
+      // element-ui使用了字体所以需要配置一下
+      {
+        test: /\.(woff|svg|eot|ttf)\??.*$/,
+        loader: 'url-loader'
+       },
       {
         test: /\.(png|jpg|svg)$/,
         use: {
@@ -105,6 +105,13 @@ module.exports = {
       filename: "css/[name][hash].css",
       chunkFilename: "css/[name][hash].css"
     }),
+    new CopyWebpackPlugin([
+			{
+				from: path.join(__dirname, "../src/static"),
+				to: path.join(__dirname, "../dist/static"),
+				ignore: [".*"]
+			}
+		]),
     // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "../public/index.html"),

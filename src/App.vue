@@ -6,15 +6,12 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
-import { show } from "@/utils/index";
 export default {
   name: "App",
   components: {
     HelloWorld,
   },
-  mounted() {
-    show();
-  },
+  mounted() {},
 };
 </script>
 
