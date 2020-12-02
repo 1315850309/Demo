@@ -2,6 +2,8 @@ const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const uglifyjsWebpackPlugin = require("uglifyjs-webpack-plugin")
+const terserWebpackPlugin = require("terser-webpack-plugin")
 const {
   CleanWebpackPlugin
 } = require("clean-webpack-plugin")
@@ -27,6 +29,18 @@ module.exports = {
     }
   },
   optimization: {
+    minimize: true,
+    minimizer: [
+      new terserWebpackPlugin({
+        terserOptions: {
+          compress: {
+            drop_debugger: true,
+            drop_console: true,//console
+            pure_funcs: ['console.log']//移除console
+          }
+        }
+      })
+    ],
     splitChunks: {
       cacheGroups: {
         commons: {
@@ -40,63 +54,63 @@ module.exports = {
   },
   module: {
     rules: [{
-        test: /\.js$/,
-        exclude: /node_modules/,
-        include: [path.join(__dirname, "../src")],
-        loader: "babel-loader"
-        // options: {
-        //   presets: ['@babel/preset-env']
-        // }
-      },
-      {
-        test: /\.css$/,
-        exclude:"/node_modules",
-        use: [MiniCssExtractPlugin.loader, {
-          loader: "css-loader"
-        }, {
-          loader: "px2rem-loader",
-          options: {
-            remUnit: 75
-          }
-        }]
-      },
-      {
-        test: /\.less$/,
-        exclude:"/node_modules",
-        use: [MiniCssExtractPlugin.loader, {
-            loader: "css-loader"
-          }, {
-            loader: "px2rem-loader",
-            options: {
-              remUnit: 75
-            }
-          },
-          {
-            loader: "less-loader"
-          }
-        ]
-      },
-      // element-ui使用了字体所以需要配置一下
-      {
-        test: /\.(woff|svg|eot|ttf)\??.*$/,
-        loader: 'url-loader'
-       },
-      {
-        test: /\.(png|jpg|svg)$/,
-        use: {
-          loader: "file-loader",
-          options: {
-            name: "images/[name][hash].[ext]",
-            esModule: false
-          }
+      test: /\.js$/,
+      exclude: /node_modules/,
+      include: [path.join(__dirname, "../src")],
+      loader: "babel-loader"
+      // options: {
+      //   presets: ['@babel/preset-env']
+      // }
+    },
+    {
+      test: /\.css$/,
+      exclude: "/node_modules",
+      use: [MiniCssExtractPlugin.loader, {
+        loader: "css-loader"
+      }, {
+        loader: "px2rem-loader",
+        options: {
+          remUnit: 75
+        }
+      }]
+    },
+    {
+      test: /\.less$/,
+      exclude: "/node_modules",
+      use: [MiniCssExtractPlugin.loader, {
+        loader: "css-loader"
+      }, {
+        loader: "px2rem-loader",
+        options: {
+          remUnit: 75
         }
       },
       {
-        test: /\.vue$/,
-        use: {
-          loader: "vue-loader"
+        loader: "less-loader"
+      }
+      ]
+    },
+    // element-ui使用了字体所以需要配置一下
+    {
+      test: /\.(woff|svg|eot|ttf)\??.*$/,
+      loader: 'url-loader'
+    },
+    {
+      test: /\.(png|jpg|svg)$/,
+      use: {
+        loader: "file-loader",
+        options: {
+          name: "images/[name][hash].[ext]",
+          esModule: false
         }
       }
+    },
+    {
+      test: /\.vue$/,
+      use: {
+        loader: "vue-loader"
+      }
+    }
     ]
   },
   plugins: [
@@ -106,12 +120,12 @@ module.exports = {
       chunkFilename: "css/[name][hash].css"
     }),
     new CopyWebpackPlugin([
-			{
-				from: path.join(__dirname, "../src/static"),
-				to: path.join(__dirname, "../dist/static"),
-				ignore: [".*"]
-			}
-		]),
+      {
+        from: path.join(__dirname, "../src/static"),
+        to: path.join(__dirname, "../dist/static"),
+        ignore: [".*"]
+      }
+    ]),
     // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "../public/index.html"),
