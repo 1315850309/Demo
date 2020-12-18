@@ -1,10 +1,6 @@
 <template>
   <div class="list-main">
-    <div
-      class="search-main"
-      @click.stop="showList"
-      v-if="!noSelect"
-    >
+    <div class="search-main" @click.stop="showList" v-if="!noSelect">
       <el-input
         placeholder="请输入内容"
         readonly
@@ -13,33 +9,17 @@
       >
       </el-input>
     </div>
-    <div
-      v-if="isShow"
-      style="position: absolute;width:100%"
-    >
-      <div
-        class="list-box"
-        v-for="(it,i) in listData"
-        :key="i"
-      >
-        <div
-          class="box-main"
-          @click.stop="selectChange(it.name,i)"
-        >
-          <div
-            class="label"
-            :class="{active:selectActive==i}"
-          >
-            <span>{{it.name}}</span>
+    <div v-if="isShow" style="position: absolute; width: 100%">
+      <div class="list-box" v-for="(it, i) in listData" :key="i">
+        <div class="box-main" @click.stop="selectChange(it, i)">
+          <div class="label" :class="{ active: selectActive == i }">
+            <span>{{ it.name }}</span>
             <i
               class="el-icon-caret-right"
-              v-if="it.children&&selectActive==i"
+              v-if="it.children && selectActive == i"
             ></i>
           </div>
-          <div
-            class="list-children"
-            v-if="it.children&&selectActive==i"
-          >
+          <div class="list-children" v-if="it.children && selectActive == i">
             <list-main
               :props-show="true"
               v-model="selectName"
@@ -137,7 +117,9 @@ export default {
   watch: {
     selectName() {
       this.$emit("input", this.selectName)
-      console.log(this.selectName)
+      this.isShow = false
+      this.selectActive = -1,
+        console.log(this.selectName)
     }
   },
   data() {
@@ -155,9 +137,11 @@ export default {
     showList() {
       this.isShow = !this.isShow
     },
-    selectChange(name, i) {
-      this.selectName = name
+    selectChange(it, i) {
       this.selectActive = i
+      if (!it.children) {
+        this.selectName = it.name
+      }
     }
   }
 }
