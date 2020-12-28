@@ -6,7 +6,7 @@
     <!-- <date-select @valueChange="test"></date-select> -->
     <!-- <subscribe></subscribe> -->
     <div style="width: 800px; height: 500px">
-      <table-custom></table-custom>
+      <table-custom :table-data="tableData"></table-custom>
     </div>
   </div>
 </template>
@@ -18,12 +18,16 @@ export default {
     let a = this.calcData(this.testData)
     console.log(a)
     this.elementAppend()
+    getInfo({}).then(res => {
+      this.tableData = res.data
+    })
     setTimeout(() => {
       this.fontAuto()
     }, 1000)
   },
   data() {
     return {
+      tableData: [],
       testData: {
         "交通运输": {
           "村务管理": ["不动产登记事务", "不动产纠纷", "其它"]

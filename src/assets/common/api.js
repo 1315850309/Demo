@@ -1,8 +1,10 @@
 import {
   request
 } from "@/utils/request"
-export function getInfo() {
+export function getInfo(data) {
   return request.request({
-    url: `http://lorempixel.com/1600/900`
+    url: `/cetc/api/letter/finishAnalysisList`,
+    method: "post",
+    data
   })
 }

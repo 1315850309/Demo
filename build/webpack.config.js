@@ -25,7 +25,9 @@ module.exports = {
     port: 8080,
     open: true,
     proxy: {
-
+      "/cetc/api": {
+        target: "http://10.0.17.234:8080", //要访问的接口域名
+      }
     }
   },
   optimization: {

@@ -15,6 +15,8 @@ class Request {
     // 添加请求拦截器
     instance.interceptors.request.use(function (config) {
       // 在发送请求之前做些什么
+      config.headers.Authorization = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImZmMGQ4YzZiLWYwYTEtNDRkNS04NDAyLTVlZWQ0MTYxYjdiNSJ9.pDDoN1qOOxH1Wry8YT7Kxne1mj5bYA8Cjvd5Y9Z_h5tZcC9UKqJHo8l4q47RP6hgXAGIYnL24idULvKjRMSTNQ"
+
       return config;
     }, function (error) {
       // 对请求错误做些什么
